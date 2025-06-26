@@ -1,0 +1,47 @@
+server {
+    listen 80;
+    server_name 158.160.6.79 tasks4day.zapto.org;
+    return 301 https://$host$request_uri;  # Перенаправление на HTTPS
+}
+
+server {
+    listen 443 ssl;
+    server_name 158.160.6.79 tasks4day.zapto.org;
+
+    location / {
+        root /var/www/taski;
+        index index.html index.htm;
+        try_files $uri $uri/ /index.html;
+    }
+
+    location /api/ {
+        proxy_pass http://unix:/run/gunicorn_taski.sock;  # Твой выбранный сокет
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    location /admin/ {
+        proxy_pass http://unix:/run/gunicorn_taski.sock;  # Твой выбранный сокет
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    location /static/ {
+        alias /var/www/taski/static/;
+    }
+
+    location /media/ {
+        alias /var/www/taski/media/;
+    }
+
+    ssl_certificate /etc/letsencrypt/live/tasks4day.zapto.org/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/tasks4day.zapto.org/privkey.pem;
+    include /etc/letsencrypt/options-ssl-nginx.conf;
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
+    # ssl_protocols TLSv1.2 TLSv1.3;  # Без дубликатов
+    # ssl_ciphers HIGH:!aNULL:!MD5;   # Без дубликатов
+}
