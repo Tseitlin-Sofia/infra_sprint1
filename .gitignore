@@ -110,6 +110,7 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+infra_sprint1_venv
 
 # Spyder project settings
 .spyderproject
