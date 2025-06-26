@@ -1,0 +1,6 @@
+ IP: 158.160.6.79;
+ name_taski: https://tasks4day.zapto.org/;
+ name_kittygram: https://kittygram.xyz/;
+ login: tseitlinsofia;
+ password: 123456789;
+ 

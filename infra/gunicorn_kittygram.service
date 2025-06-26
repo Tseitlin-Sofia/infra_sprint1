@@ -1,0 +1,13 @@
+[Unit]
+Description=Gunicorn instance for Kittygram
+After=network.target
+
+[Service]
+User=yc-user
+Group=www-data
+WorkingDirectory=/home/yc-user/infra_sprint1/backend
+Environment="PATH=/home/yc-user/infra_sprint1/backend/venv_infra_sprint1/bin"
+ExecStart=/home/yc-user/infra_sprint1/backend/venv_infra_sprint1/bin/gunicorn --workers 3 --bind unix:/run/gunicorn_kittygram.sock kittygram_backend.wsgi:application
+
+[Install]
+WantedBy=multi-user.target
